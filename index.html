@@ -181,9 +181,9 @@ button:hover {
 
     <div id="game-body">
       <div id="throws">
-        <input class="throw-input" type="number" placeholder="Throw 1" min="0" max="60">
-        <input class="throw-input" type="number" placeholder="Throw 2" min="0" max="60">
-        <input class="throw-input" type="number" placeholder="Throw 3" min="0" max="60">
+        <input class="throw-input" type="text" placeholder="Throw 1">
+        <input class="throw-input" type="text" placeholder="Throw 2">
+        <input class="throw-input" type="text" placeholder="Throw 3">
       </div>
 
       <div id="buttons">
@@ -291,7 +291,39 @@ document.getElementById('validate').onclick = () => {
   saveState();
 
   const inputs = document.querySelectorAll('.throw-input');
-  playTurn([...inputs].map(i => +i.value || 0));
+
+  const throws = [...inputs].map(i => {
+    let val = i.value.trim().toUpperCase();
+
+    if (!val) return 0;
+
+    // ===== 1. Multiplier D/T/S =====
+    const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
+    if (dtMatch) {
+      const type = dtMatch[1];
+      const number = parseInt(dtMatch[2], 10);
+      if (!isNaN(number)) {
+        if (type === 'D') return number * 2;
+        if (type === 'T') return number * 3;
+        return number; // S
+      }
+    }
+
+    // ===== 2. Classic Multiplier =====
+    val = val.replace(',', '.'); // comma/dot
+    if (val.includes('.')) {
+      const [multiplier, base] = val.split('.').map(Number);
+      if (!isNaN(multiplier) && !isNaN(base)) {
+        return multiplier * base;
+      }
+    }
+
+    // ===== 3. Simple number =====
+    const num = parseInt(val, 10);
+    return isNaN(num) ? 0 : num;
+  });
+
+  playTurn(throws);
   inputs.forEach(i => i.value = '');
 };
 

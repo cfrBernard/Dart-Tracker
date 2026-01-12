@@ -239,6 +239,49 @@ const ui = {
   }
 };
 
+// Score Preview
+function updatePreviewScore() {
+  const p = state.players[state.currentPlayer];
+  if (!p) return;
+
+  const inputs = document.querySelectorAll('.throw-input');
+  const throws = [...inputs].map(i => {
+    let val = i.value.trim().toUpperCase();
+    if (!val) return 0;
+
+    const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
+    if (dtMatch) {
+      const type = dtMatch[1];
+      const number = parseInt(dtMatch[2], 10);
+      if (!isNaN(number)) {
+        if (type === 'D') return number * 2;
+        if (type === 'T') return number * 3;
+        return number;
+      }
+    }
+
+    val = val.replace(',', '.');
+    if (val.includes('.')) {
+      const [multiplier, base] = val.split('.').map(Number);
+      if (!isNaN(multiplier) && !isNaN(base)) return multiplier * base;
+    }
+
+    const num = parseInt(val, 10);
+    return isNaN(num) ? 0 : num;
+  });
+
+  let total = throws.reduce((a,b) => a+b, 0);
+  let preview = p.score - total;
+  if (preview < 0) preview = p.score;
+
+  const el = document.getElementById(`player${state.currentPlayer}`);
+  el.querySelector('.score').textContent = preview;
+}
+
+throwInputs.forEach(input => {
+  input.addEventListener('input', updatePreviewScore);
+});
+
 // ===== Game logic =====
 function playTurn(throws) {
   const p = state.players[state.currentPlayer];
@@ -297,7 +340,7 @@ document.getElementById('validate').onclick = () => {
 
     if (!val) return 0;
 
-    // ===== 1. Multiplier D/T/S =====
+    // 1. Multiplier D/T/S
     const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
     if (dtMatch) {
       const type = dtMatch[1];
@@ -309,8 +352,8 @@ document.getElementById('validate').onclick = () => {
       }
     }
 
-    // ===== 2. Classic Multiplier =====
-    val = val.replace(',', '.'); // comma/dot
+    // 2. Classic Multiplier
+    val = val.replace(',', '.');
     if (val.includes('.')) {
       const [multiplier, base] = val.split('.').map(Number);
       if (!isNaN(multiplier) && !isNaN(base)) {
@@ -318,7 +361,7 @@ document.getElementById('validate').onclick = () => {
       }
     }
 
-    // ===== 3. Simple number =====
+    // 3. Simple number
     const num = parseInt(val, 10);
     return isNaN(num) ? 0 : num;
   });
@@ -348,7 +391,7 @@ document.getElementById('undo').onclick = () => {
   ui.syncHeader();
 };
 
-// ===== Autofocus input =====
+// Autofocus input
 const throwInputs = document.querySelectorAll('.throw-input');
 
 throwInputs.forEach((input, index) => {

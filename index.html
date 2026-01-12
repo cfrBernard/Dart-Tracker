@@ -214,10 +214,8 @@ const state = {
 const router = {
   go(screen) {
     state.screen = screen;
-    document.querySelectorAll('.screen')
-      .forEach(s => s.classList.remove('is-active'));
-    document.querySelector(`[data-screen="${screen}"]`)
-      .classList.add('is-active');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('is-active'));
+    document.querySelector(`[data-screen="${screen}"]`).classList.add('is-active');
   }
 };
 
@@ -239,13 +237,18 @@ const ui = {
   }
 };
 
-// Score Preview
+// ===== DOM Elements =====
+const throwInputs = document.querySelectorAll('.throw-input');
+const p1 = document.getElementById('p1');
+const p2 = document.getElementById('p2');
+const startingScore = document.getElementById('startingScore');
+
+// ===== Score Preview =====
 function updatePreviewScore() {
   const p = state.players[state.currentPlayer];
   if (!p) return;
 
-  const inputs = document.querySelectorAll('.throw-input');
-  const throws = [...inputs].map(i => {
+  const throws = [...throwInputs].map(i => {
     let val = i.value.trim().toUpperCase();
     if (!val) return 0;
 
@@ -278,6 +281,7 @@ function updatePreviewScore() {
   el.querySelector('.score').textContent = preview;
 }
 
+// Attach preview update
 throwInputs.forEach(input => {
   input.addEventListener('input', updatePreviewScore);
 });
@@ -328,19 +332,18 @@ document.getElementById('start').onclick = () => {
   state.history = [];
   ui.syncHeader();
   router.go('game');
+
+  // focus le premier input au démarrage
+  throwInputs[0].focus();
 };
 
 document.getElementById('validate').onclick = () => {
   saveState();
 
-  const inputs = document.querySelectorAll('.throw-input');
-
-  const throws = [...inputs].map(i => {
+  const throws = [...throwInputs].map(i => {
     let val = i.value.trim().toUpperCase();
-
     if (!val) return 0;
 
-    // 1. Multiplier D/T/S
     const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
     if (dtMatch) {
       const type = dtMatch[1];
@@ -348,31 +351,26 @@ document.getElementById('validate').onclick = () => {
       if (!isNaN(number)) {
         if (type === 'D') return number * 2;
         if (type === 'T') return number * 3;
-        return number; // S
+        return number;
       }
     }
 
-    // 2. Classic Multiplier
     val = val.replace(',', '.');
     if (val.includes('.')) {
       const [multiplier, base] = val.split('.').map(Number);
-      if (!isNaN(multiplier) && !isNaN(base)) {
-        return multiplier * base;
-      }
+      if (!isNaN(multiplier) && !isNaN(base)) return multiplier * base;
     }
 
-    // 3. Simple number
     const num = parseInt(val, 10);
     return isNaN(num) ? 0 : num;
   });
 
   playTurn(throws);
-  inputs.forEach(i => i.value = '');
+  throwInputs.forEach(i => i.value = '');
 };
 
 document.getElementById('skip').onclick = () => {
   saveState();
-
   ui.log(`${state.players[state.currentPlayer].name} skipped`);
   state.currentPlayer = 1 - state.currentPlayer;
   ui.syncHeader();
@@ -380,37 +378,29 @@ document.getElementById('skip').onclick = () => {
 
 document.getElementById('undo').onclick = () => {
   if (!state.history.length) return;
-
   const previous = state.history.pop();
-
   state.players = previous.players;
   state.currentPlayer = previous.currentPlayer;
   state.turn = previous.turn;
   document.getElementById('log-list').innerHTML = previous.log;
-
   ui.syncHeader();
 };
 
 // Autofocus input
-const throwInputs = document.querySelectorAll('.throw-input');
-
 throwInputs.forEach((input, index) => {
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-
       if (index < throwInputs.length - 1) {
         throwInputs[index + 1].focus();
       } else {
         document.getElementById('validate').click();
-        setTimeout(() => {
-          throwInputs[0].focus();
-        }, 0);
+        setTimeout(() => throwInputs[0].focus(), 0);
       }
     }
   });
 });
-
 </script>
+
 </body>
 </html>

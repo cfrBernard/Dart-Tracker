@@ -201,7 +201,7 @@ button:hover {
 </section>
 
 <script>
-/* ===== State ===== */
+// ===== State =====
 const state = {
   screen: 'welcome',
   players: [],
@@ -210,7 +210,7 @@ const state = {
   history: []
 };
 
-/* ===== Router ===== */
+// ===== Router =====
 const router = {
   go(screen) {
     state.screen = screen;
@@ -221,7 +221,7 @@ const router = {
   }
 };
 
-/* ===== UI ===== */
+// ===== UI =====
 const ui = {
   syncHeader() {
     state.players.forEach((p, i) => {
@@ -239,7 +239,7 @@ const ui = {
   }
 };
 
-/* ===== Game logic ===== */
+// ===== Game logic =====
 function playTurn(throws) {
   const p = state.players[state.currentPlayer];
   const total = throws.reduce((a,b) => a+b, 0);
@@ -274,7 +274,7 @@ function saveState() {
   });
 }
 
-/* ===== Events ===== */
+// ===== Events =====
 document.getElementById('start').onclick = () => {
   state.players = [
     { name: p1.value || 'Player 1', score: +startingScore.value },
@@ -347,6 +347,26 @@ document.getElementById('undo').onclick = () => {
 
   ui.syncHeader();
 };
+
+// ===== Autofocus input =====
+const throwInputs = document.querySelectorAll('.throw-input');
+
+throwInputs.forEach((input, index) => {
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+
+      if (index < throwInputs.length - 1) {
+        throwInputs[index + 1].focus();
+      } else {
+        document.getElementById('validate').click();
+        setTimeout(() => {
+          throwInputs[0].focus();
+        }, 0);
+      }
+    }
+  });
+});
 
 </script>
 </body>

@@ -1,332 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dart Tracker</title>
-  <style>
-    /* ===== Reset / base ===== */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-      background: #f5f5f5;
-      color: #333;
-    }
-    section {
-      width: 100%;
-      max-width: 500px;
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input, select, button {
-      padding: 10px;
-      margin: 5px 0;
-      font-size: 1rem;
-      width: 100%;
-    }
-    button {
-      cursor: pointer;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #0056b3;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dart Tracker</title>
 
-    /* ===== Welcome Screen ===== */
-    #welcome-screen {
-      display: block;
-    }
+<style>
+/* ===== Reset ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
 
-    /* ===== Game Screen ===== */
-    #game-screen {
-      display: none;
-    }
-    #header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    #header div {
-      flex: 1;
-      padding: 10px;
-      border-radius: 6px;
-    }
-    #header .active {
-      background: #e0f7fa;
-      font-weight: bold;
-    }
-    #game-body {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .throw-input {
-      flex: 1;
-      text-align: center;
-    }
-    #buttons {
-      display: flex;
-      gap: 10px;
-    }
-    #buttons button {
-      flex: 1;
-    }
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  background: #f5f5f5;
+}
 
-    /* ===== Log / Footer ===== */
-    #log {
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 6px;
-      max-height: 150px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-    }
-    #log-list li {
-      margin-bottom: 4px;
-      cursor: pointer;
-    }
+/* ===== App container ===== */
+.app {
+  width: 100%;
+  max-width: 500px;
+  height: calc(100vh - 40px);
 
-    /* ===== Responsive ===== */
-    @media (min-width: 400px) {
-      #game-body {
-        flex-direction: row;
-      }
-      .throw-input {
-        width: 60px;
-      }
-      #buttons {
-        flex-direction: row;
-      }
-    }
-  </style>
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* ===== Screens ===== */
+.screen {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.screen.is-active {
+  display: flex;
+}
+
+/* ===== Typo / inputs ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+button {
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* ===== Header ===== */
+#header {
+  display: flex;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#header div {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+#header .active {
+  background: #e0f7fa;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* ===== Game body ===== */
+#game-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#throws {
+  display: flex;
+  gap: 10px;
+}
+
+.throw-input {
+  flex: 1;
+  text-align: center;
+}
+
+#buttons {
+  display: flex;
+  gap: 10px;
+}
+
+#buttons button {
+  flex: 1;
+}
+
+/* ===== Log ===== */
+#log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+#log-list li {
+  margin-bottom: 4px;
+}
+</style>
 </head>
+
 <body>
 
-  <!-- ===== Welcome / Setup Screen ===== -->
-  <section id="welcome-screen">
-    <h1>Dart Counter</h1>
-    <input type="text" id="player1-name" placeholder="Player 1">
-    <input type="text" id="player2-name" placeholder="Player 2">
+<section class="app">
+
+  <!-- ===== Welcome ===== -->
+  <div class="screen is-active" data-screen="welcome">
+    <h1>Dart Tracker</h1>
+    <input id="p1" placeholder="Player 1">
+    <input id="p2" placeholder="Player 2">
+
     <label>
-      Starting Score:
-      <select id="starting-score">
-        <option value="301">301</option>
-        <option value="501" selected>501</option>
-        <option value="701">701</option>
+      Starting score
+      <select id="startingScore">
+        <option>301</option>
+        <option selected>501</option>
+        <option>701</option>
       </select>
     </label>
-    <button id="start-btn">Start</button>
-  </section>
 
-  <!-- ===== Main Game Screen ===== -->
-  <section id="game-screen">
-    <!-- Header -->
+    <button id="start">Start game</button>
+  </div>
+
+  <!-- ===== Game ===== -->
+  <div class="screen" data-screen="game">
+
     <div id="header">
-      <div id="player1-display">
-        <span class="name">Player 1</span>
-        <br>
-        <span class="score">501</span>
+      <div id="player0">
+        <div class="name"></div>
+        <div class="score"></div>
       </div>
-      <div id="player2-display">
-        <span class="name">Player 2</span>
-        <br>
-        <span class="score">501</span>
+      <div id="player1">
+        <div class="name"></div>
+        <div class="score"></div>
       </div>
     </div>
 
-    <!-- Body -->
     <div id="game-body">
-      <input type="number" class="throw-input" placeholder="Throw 1" min="0" max="60">
-      <input type="number" class="throw-input" placeholder="Throw 2" min="0" max="60">
-      <input type="number" class="throw-input" placeholder="Throw 3" min="0" max="60">
+      <div id="throws">
+        <input class="throw-input" type="number" placeholder="Throw 1" min="0" max="60">
+        <input class="throw-input" type="number" placeholder="Throw 2" min="0" max="60">
+        <input class="throw-input" type="number" placeholder="Throw 3" min="0" max="60">
+      </div>
+
       <div id="buttons">
-        <button id="validate-btn">Validate</button>
-        <button id="undo-btn">Undo</button>
-        <button id="skip-btn">Skip</button>
+        <button id="validate">Validate</button>
+        <button id="undo">Undo</button>
+        <button id="skip">Skip</button>
       </div>
     </div>
 
-    <!-- Footer / Log -->
     <div id="log">
       <ul id="log-list"></ul>
     </div>
-  </section>
+
+  </div>
+</section>
 
 <script>
-  // ===== STATE =====
-  const gameState = {
-    startingScore: 501,
-    players: [
-      { name: 'Player 1', score: 501 },
-      { name: 'Player 2', score: 501 }
-    ],
-    currentPlayer: 0,
-    turn: 1,
-    history: []
-  };
+/* ===== State ===== */
+const state = {
+  screen: 'welcome',
+  players: [],
+  currentPlayer: 0,
+  turn: 1,
+  history: []
+};
 
-  // ===== START GAME =====
-  const startBtn = document.getElementById('start-btn');
-  startBtn.addEventListener('click', () => {
-    const p1 = document.getElementById('player1-name').value || 'Player 1';
-    const p2 = document.getElementById('player2-name').value || 'Player 2';
-    const startingScore = parseInt(document.getElementById('starting-score').value);
-
-    gameState.startingScore = startingScore;
-    gameState.players = [
-      { name: p1, score: startingScore },
-      { name: p2, score: startingScore }
-    ];
-    gameState.currentPlayer = 0;
-    gameState.turn = 1;
-    gameState.history = [];
-
-    // Update header
-    document.querySelector('#player1-display .name').textContent = p1;
-    document.querySelector('#player2-display .name').textContent = p2;
-    updateScores();
-    updateActivePlayer();
-
-    // Switch screens
-    document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'block';
-  });
-
-  // ===== UTILS =====
-  function updateScores() {
-    document.querySelector('#player1-display .score').textContent = gameState.players[0].score;
-    document.querySelector('#player2-display .score').textContent = gameState.players[1].score;
+/* ===== Router ===== */
+const router = {
+  go(screen) {
+    state.screen = screen;
+    document.querySelectorAll('.screen')
+      .forEach(s => s.classList.remove('is-active'));
+    document.querySelector(`[data-screen="${screen}"]`)
+      .classList.add('is-active');
   }
+};
 
-  function updateActivePlayer() {
-    const p1Div = document.getElementById('player1-display');
-    const p2Div = document.getElementById('player2-display');
-    p1Div.classList.toggle('active', gameState.currentPlayer === 0);
-    p2Div.classList.toggle('active', gameState.currentPlayer === 1);
-  }
+/* ===== UI ===== */
+const ui = {
+  syncHeader() {
+    state.players.forEach((p, i) => {
+      const el = document.getElementById(`player${i}`);
+      el.querySelector('.name').textContent = p.name;
+      el.querySelector('.score').textContent = p.score;
+      el.classList.toggle('active', i === state.currentPlayer);
+    });
+  },
 
-  function addLog(message) {
+  log(msg) {
     const ul = document.getElementById('log-list');
-    const li = document.createElement('li');
-    li.textContent = message;
-    ul.appendChild(li);
-    ul.scrollTop = ul.scrollHeight;
+    ul.insertAdjacentHTML('beforeend', `<li>${msg}</li>`);
+    ul.parentElement.scrollTop = ul.parentElement.scrollHeight;
+  }
+};
+
+/* ===== Game logic ===== */
+function playTurn(throws) {
+  const p = state.players[state.currentPlayer];
+  const total = throws.reduce((a,b) => a+b, 0);
+  const before = p.score;
+  let after = before - total;
+
+  if (after < 0) {
+    after = before;
+    ui.log(`${p.name} busts (${total})`);
+  } else {
+    p.score = after;
+    ui.log(`${p.name} scores ${total} → ${after}`);
   }
 
-  // ===== GAME LOGIC =====
-  function playTurn(throws) {
-    const player = gameState.players[gameState.currentPlayer];
-    const scoreBefore = player.score;
-    const total = throws.reduce((a,b) => a+b, 0);
-
-    let bust = false;
-    let scoreAfter = scoreBefore - total;
-
-    if (scoreAfter < 0) {
-      bust = true;
-      scoreAfter = scoreBefore;
-      addLog(`${player.name} busts with ${total}! Score remains ${scoreAfter}`);
-    } else if (scoreAfter === 0) {
-      player.score = 0;
-      updateScores();
-      addLog(`${player.name} wins! 🎯`);
-      alert(`${player.name} wins!`);
-      return { winner: player.name };
-    } else {
-      player.score = scoreAfter;
-      addLog(`${player.name} scores ${total}, new score: ${scoreAfter}`);
-    }
-
-    // Log tour
-    gameState.history.push({
-      turn: gameState.turn,
-      playerIndex: gameState.currentPlayer,
-      throws,
-      total,
-      scoreBefore,
-      scoreAfter,
-      bust
-    });
-
-    // Passer au joueur suivant
-    gameState.currentPlayer = 1 - gameState.currentPlayer;
-    if (gameState.currentPlayer === 0) gameState.turn++;
-
-    updateScores();
-    updateActivePlayer();
+  if (after === 0) {
+    ui.log(`${p.name} wins 🎯`);
+    return;
   }
 
-  function undoTurn() {
-    const lastTurn = gameState.history.pop();
-    if (!lastTurn) return;
-    const player = gameState.players[lastTurn.playerIndex];
-    player.score = lastTurn.scoreBefore;
-    gameState.currentPlayer = lastTurn.playerIndex;
-    if (gameState.currentPlayer === 1) gameState.turn = lastTurn.turn;
-    addLog(`Undo: ${player.name}'s turn restored to ${player.score}`);
-    updateScores();
-    updateActivePlayer();
-  }
+  state.currentPlayer = 1 - state.currentPlayer;
+  if (state.currentPlayer === 0) state.turn++;
 
-  function skipTurn() {
-    const player = gameState.players[gameState.currentPlayer];
-    addLog(`${player.name} skipped their turn.`);
-    gameState.history.push({
-      turn: gameState.turn,
-      playerIndex: gameState.currentPlayer,
-      throws: [],
-      total: 0,
-      scoreBefore: player.score,
-      scoreAfter: player.score,
-      skipped: true
-    });
-    gameState.currentPlayer = 1 - gameState.currentPlayer;
-    if (gameState.currentPlayer === 0) gameState.turn++;
-    updateActivePlayer();
-  }
+  ui.syncHeader();
+}
 
-  // ===== EVENTS BUTTONS =====
-  document.getElementById('validate-btn').addEventListener('click', () => {
-    const inputs = document.querySelectorAll('.throw-input');
-    const throws = Array.from(inputs).map(i => parseInt(i.value) || 0);
-    playTurn(throws);
-    inputs.forEach(i => i.value = '');
-    inputs[0].focus();
+function saveState() {
+  state.history.push({
+    players: state.players.map(p => ({ ...p })),
+    currentPlayer: state.currentPlayer,
+    turn: state.turn,
+    log: document.getElementById('log-list').innerHTML
   });
+}
 
-  document.getElementById('undo-btn').addEventListener('click', () => {
-    undoTurn();
-  });
+/* ===== Events ===== */
+document.getElementById('start').onclick = () => {
+  state.players = [
+    { name: p1.value || 'Player 1', score: +startingScore.value },
+    { name: p2.value || 'Player 2', score: +startingScore.value }
+  ];
+  state.currentPlayer = 0;
+  state.turn = 1;
+  state.history = [];
+  ui.syncHeader();
+  router.go('game');
+};
 
-  document.getElementById('skip-btn').addEventListener('click', () => {
-    skipTurn();
-    const inputs = document.querySelectorAll('.throw-input');
-    inputs.forEach(i => i.value = '');
-    inputs[0].focus();
-  });
+document.getElementById('validate').onclick = () => {
+  saveState();
+
+  const inputs = document.querySelectorAll('.throw-input');
+  playTurn([...inputs].map(i => +i.value || 0));
+  inputs.forEach(i => i.value = '');
+};
+
+document.getElementById('skip').onclick = () => {
+  saveState();
+
+  ui.log(`${state.players[state.currentPlayer].name} skipped`);
+  state.currentPlayer = 1 - state.currentPlayer;
+  ui.syncHeader();
+};
+
+document.getElementById('undo').onclick = () => {
+  if (!state.history.length) return;
+
+  const previous = state.history.pop();
+
+  state.players = previous.players;
+  state.currentPlayer = previous.currentPlayer;
+  state.turn = previous.turn;
+  document.getElementById('log-list').innerHTML = previous.log;
+
+  ui.syncHeader();
+};
+
 </script>
-
-
 </body>
 </html>

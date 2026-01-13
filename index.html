@@ -270,32 +270,9 @@ function updatePreviewScore() {
   const p = state.players[state.currentPlayer];
   if (!p) return;
 
-  const throws = [...throwInputs].map(i => {
-    let val = i.value.trim().toUpperCase();
-    if (!val) return 0;
+  const throws = parseThrows(throwInputs);
+  const total = throws.reduce((a, b) => a + b, 0);
 
-    const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
-    if (dtMatch) {
-      const type = dtMatch[1];
-      const number = parseInt(dtMatch[2], 10);
-      if (!isNaN(number)) {
-        if (type === 'D') return number * 2;
-        if (type === 'T') return number * 3;
-        return number;
-      }
-    }
-
-    val = val.replace(',', '.');
-    if (val.includes('.')) {
-      const [multiplier, base] = val.split('.').map(Number);
-      if (!isNaN(multiplier) && !isNaN(base)) return multiplier * base;
-    }
-
-    const num = parseInt(val, 10);
-    return isNaN(num) ? 0 : num;
-  });
-
-  let total = throws.reduce((a,b) => a+b, 0);
   let preview = p.score - total;
   if (preview < 0) preview = p.score;
 
@@ -355,39 +332,16 @@ document.getElementById('start').onclick = () => {
   ui.syncHeader();
   router.go('game');
 
-  // focus le premier input au démarrage
+  // first input focus
   throwInputs[0].focus();
 };
 
 document.getElementById('validate').onclick = () => {
   saveState();
 
-  const throws = [...throwInputs].map(i => {
-    let val = i.value.trim().toUpperCase();
-    if (!val) return 0;
-
-    const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
-    if (dtMatch) {
-      const type = dtMatch[1];
-      const number = parseInt(dtMatch[2], 10);
-      if (!isNaN(number)) {
-        if (type === 'D') return number * 2;
-        if (type === 'T') return number * 3;
-        return number;
-      }
-    }
-
-    val = val.replace(',', '.');
-    if (val.includes('.')) {
-      const [multiplier, base] = val.split('.').map(Number);
-      if (!isNaN(multiplier) && !isNaN(base)) return multiplier * base;
-    }
-
-    const num = parseInt(val, 10);
-    return isNaN(num) ? 0 : num;
-  });
-
+  const throws = parseThrows(throwInputs);
   playTurn(throws);
+
   throwInputs.forEach(i => i.value = '');
 };
 
@@ -423,6 +377,41 @@ throwInputs.forEach((input, index) => {
   });
 });
 
+// ===== Utils =====
+function parseThrow(raw) {
+  if (!raw) return 0;
+
+  let val = raw.trim().toUpperCase();
+
+  // D20 / T19 / S5
+  const dtMatch = val.match(/^(D|T|S)(\d{1,2})$/);
+  if (dtMatch) {
+    const type = dtMatch[1];
+    const number = parseInt(dtMatch[2], 10);
+    if (isNaN(number)) return 0;
+
+    if (type === 'D') return number * 2;
+    if (type === 'T') return number * 3;
+    return number; // S
+  }
+
+  // 2.20 / 3.19 / 2,20
+  val = val.replace(',', '.');
+  if (val.includes('.')) {
+    const [multiplier, base] = val.split('.').map(Number);
+    if (!isNaN(multiplier) && !isNaN(base)) {
+      return multiplier * base;
+    }
+  }
+
+  // simple num
+  const num = parseInt(val, 10);
+  return isNaN(num) ? 0 : num;
+}
+
+function parseThrows(inputs) {
+  return [...inputs].map(i => parseThrow(i.value));
+}
 
 // ===== Game actions =====
 document.getElementById('reset').onclick = () => {

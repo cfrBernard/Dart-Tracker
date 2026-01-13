@@ -1,0 +1,155 @@
+/* ===== Reset ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+/* ===== App container ===== */
+.app {
+  width: 100%;
+  max-width: 500px;
+  height: calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* ===== Screens ===== */
+.screen {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.screen.is-active {
+  display: flex;
+}
+
+/* ===== Typo / inputs ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+button {
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* ===== Header ===== */
+#header {
+  display: flex;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#header div {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+#header .active {
+  background: #e0f7fa;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.score.bust {
+  color: red;
+  font-weight: bold;
+}
+
+/* ===== Game body ===== */
+#game-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#throws {
+  display: flex;
+  gap: 10px;
+}
+
+.throw-input {
+  flex: 1;
+  text-align: center;
+}
+
+#buttons {
+  display: flex;
+  gap: 10px;
+}
+
+#buttons button {
+  flex: 1;
+}
+
+/* ===== Log ===== */
+#log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+#log-list li {
+  margin-bottom: 4px;
+}
+
+/* ===== Game actions ===== */
+#game-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#game-actions button {
+  flex: 1;
+  background: #6c757d;
+}
+
+#game-actions button:hover {
+  background: #495057;
+}

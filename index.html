@@ -140,6 +140,22 @@ button:hover {
 #log-list li {
   margin-bottom: 4px;
 }
+
+/* ===== Game actions ===== */
+#game-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#game-actions button {
+  flex: 1;
+  background: #6c757d;
+}
+
+#game-actions button:hover {
+  background: #495057;
+}
 </style>
 </head>
 
@@ -195,6 +211,12 @@ button:hover {
 
     <div id="log">
       <ul id="log-list"></ul>
+    </div>
+
+    <div id="game-actions">
+      <button id="reset">Reset</button>
+      <button id="home">Home</button>
+      <button id="help">Help</button>
     </div>
 
   </div>
@@ -400,6 +422,35 @@ throwInputs.forEach((input, index) => {
     }
   });
 });
+
+
+// ===== Game actions =====
+document.getElementById('reset').onclick = () => {
+  const startScore = +startingScore.value;
+
+  state.players.forEach(p => {
+    p.score = startScore;
+  });
+
+  state.currentPlayer = 0;
+  state.turn = 1;
+  state.history = [];
+
+  document.getElementById('log-list').innerHTML = '';
+  throwInputs.forEach(i => i.value = '');
+
+  ui.syncHeader();
+  throwInputs[0].focus();
+};
+
+document.getElementById('home').onclick = () => {
+  router.go('welcome');
+};
+
+document.getElementById('help').onclick = () => {
+  console.log('Help clicked (placeholder)');
+  alert('Help page coming soon');
+};
 </script>
 
 </body>

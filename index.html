@@ -98,6 +98,11 @@ button:hover {
   font-size: 1.2rem;
 }
 
+.score.bust {
+  color: red;
+  font-weight: bold;
+}
+
 /* ===== Game body ===== */
 #game-body {
   display: flex;
@@ -248,6 +253,7 @@ const ui = {
       const el = document.getElementById(`player${i}`);
       el.querySelector('.name').textContent = p.name;
       el.querySelector('.score').textContent = p.score;
+      el.querySelector('.score').classList.remove('bust');
       el.classList.toggle('active', i === state.currentPlayer);
     });
   },
@@ -274,10 +280,17 @@ function updatePreviewScore() {
   const total = throws.reduce((a, b) => a + b, 0);
 
   let preview = p.score - total;
-  if (preview < 0) preview = p.score;
-
   const el = document.getElementById(`player${state.currentPlayer}`);
-  el.querySelector('.score').textContent = preview;
+  const scoreEl = el.querySelector('.score');
+
+  if (preview < 0) {
+    preview = -(total - p.score);
+    scoreEl.classList.add('bust');
+  } else {
+    scoreEl.classList.remove('bust');
+  }
+
+  scoreEl.textContent = preview;
 }
 
 // Attach preview update

@@ -215,7 +215,7 @@ button:hover {
 
     <div id="game-actions">
       <button id="reset">Reset</button>
-      <button id="home">Home</button>
+      <button id="home">Quit</button>
       <button id="help">Help</button>
     </div>
 
@@ -294,14 +294,14 @@ function playTurn(throws) {
 
   if (after < 0) {
     after = before;
-    ui.log(`${p.name} busts (${total})`);
+    ui.log('BUST', p, total);
   } else {
     p.score = after;
-    ui.log(`${p.name} scores ${total} → ${after}`);
+    ui.log('SCORE', p, total, after);
   }
 
   if (after === 0) {
-    ui.log(`${p.name} wins 🎯`);
+    ui.log('WIN', p);
     return;
   }
 
@@ -347,7 +347,7 @@ document.getElementById('validate').onclick = () => {
 
 document.getElementById('skip').onclick = () => {
   saveState();
-  ui.log(`${state.players[state.currentPlayer].name} skipped`);
+  ui.log('SKIP', state.players[state.currentPlayer]);
   state.currentPlayer = 1 - state.currentPlayer;
   ui.syncHeader();
 };
@@ -378,6 +378,30 @@ throwInputs.forEach((input, index) => {
 });
 
 // ===== Utils =====
+ui.log = function(type, player, valueBefore = null, valueAfter = null) {
+  const ul = document.getElementById('log-list');
+
+  const turn = state.turn;
+  const playerIndex = state.players.indexOf(player);
+  const emojis = {
+    SCORE: '⚡',
+    BUST: '❌',
+    SKIP: '⏩',
+    WIN: '🎯'
+  };
+
+  let msg = `[T${turn} - P${playerIndex + 1}] ${type} ${emojis[type] ?? ''} ${player.name}`;
+
+  if (type === 'SCORE') {
+    msg += `: ${valueBefore} → ${valueAfter}`;
+  } else if (type === 'BUST') {
+    msg += `: ${valueBefore}`;
+  }
+
+  ul.insertAdjacentHTML('afterbegin', `<li>${msg}</li>`);
+  ul.parentElement.scrollTop = 0;
+};
+
 function parseThrow(raw) {
   if (!raw) return 0;
 
@@ -433,6 +457,12 @@ document.getElementById('reset').onclick = () => {
 };
 
 document.getElementById('home').onclick = () => {
+  
+  state.history = [];
+
+  document.getElementById('log-list').innerHTML = '';
+  throwInputs.forEach(i => i.value = '');
+
   router.go('welcome');
 };
 

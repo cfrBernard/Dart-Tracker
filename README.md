@@ -2,7 +2,7 @@
 
 A lightweight web application to track darts games (301 / 501 / 701) in real time. Designed for simplicity, speed, and focus during gameplay, Dart Tracker helps players manage scores, turns, and game history without friction.
 
-![Version](https://img.shields.io/badge/version-v0.1.0-blue)
+![Version](https://img.shields.io/badge/version-v0.2.0-blue)
 [![License](https://img.shields.io/github/license/cfrBernard/Dart-Tracker)](./LICENSE.md)
 
 ## Features
@@ -14,11 +14,10 @@ A lightweight web application to track darts games (301 / 501 / 701) in real tim
 - Bust handling (invalid scores revert the turn)
 - Live score preview while typing throws
 - Game log with turn history
-- Undo last action (turn, skip, validate)
-- Skip turn
-- Reset game
+- Undo last action, Skip turn, Reset game
+- Security persistence (resume game)
 
---- 
+---
 
 ## Getting Started
 
@@ -88,22 +87,24 @@ open index.html
 ```
 Dart-Tracker/
 ├── assets/
-│   └── icons/              # App icons (future use)
+│   └── icons/
 ├── css/
-│   └── style.css           # Global styles
-├── docs/                   # Documentation & notes
-├── index.html              # App entry point
+│   └── style.css
+├── docs/
+│   └── CHANGELOG.md
 ├── js/
-│   ├── events.js           # DOM event handlers
-│   ├── game.js             # Core game logic
-│   ├── preview.js          # Live score preview
-│   ├── router.js           # Screen navigation
-│   ├── state.js            # Global application state
-│   ├── ui.js               # UI sync & logging
-│   └── utils.js            # Parsing & helpers
-├── persistence/
-│   ├── security.js         # (WIP) security persistence
-│   └── stats.js            # (WIP) game statistics 
+│   ├── events.js
+│   ├── game.js
+│   ├── init.js
+│   ├── persistence/
+│   │   ├── security.js
+│   │   └── stats.js
+│   ├── preview.js
+│   ├── router.js
+│   ├── state.js
+│   ├── ui.js
+│   └── utils.js
+├── index.html
 ├── LICENSE.md
 └── README.md
 ```
@@ -127,10 +128,9 @@ Dart-Tracker/
 
 ### Short Term
 
-- Define and stabilize application architecture
-- Implement Security Persistence
 - Implement Business / Game Persistence
 - Help popup (rules & input format)
+- Resume game popup
 - CSS polish
     - Animations
     - Game action feedback
@@ -145,15 +145,12 @@ Dart-Tracker/
 
 ### Persistence (Planned)
 
-- **Security persistence**
-    - User/session safety
-    - Anti-tampering logic
 - **Business persistence**
     - Game stats
     - Match history
     - Player performance
 
-> Currently scaffolded but not implemented in v0.1.0
+> Currently scaffolded but not implemented in v0.2.0
 
 ---
 

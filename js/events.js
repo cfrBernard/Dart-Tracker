@@ -6,11 +6,19 @@ import { ui } from './ui.js';
 import { playTurn, saveState } from './game.js';
 import { parseThrows } from './utils.js';
 import { updatePreviewScore } from './preview.js';
+import { saveCurrentGame } from './persistence/security.js';
+import { clearCurrentGame } from './persistence/security.js';
+import { initApp } from './init.js';
 
 const p1 = document.getElementById('p1');
 const p2 = document.getElementById('p2');
 const throwInputs = document.querySelectorAll('.throw-input');
 const startingScore = document.getElementById('startingScore');
+
+// ===== Init (Restore IF "playing") =====
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+});
 
 // ===== Welcome / Start =====
 document.getElementById('start').onclick = () => {
@@ -31,6 +39,7 @@ document.getElementById('validate').onclick = () => {
   saveState();
   const throws = parseThrows(throwInputs);
   playTurn(throws);
+  saveCurrentGame('playing');
   throwInputs.forEach(i => i.value = '');
 };
 
@@ -40,6 +49,7 @@ document.getElementById('skip').onclick = () => {
   ui.log('SKIP', state.players[state.currentPlayer]);
   state.currentPlayer = 1 - state.currentPlayer;
   ui.syncHeader();
+  saveCurrentGame('playing');
 };
 
 document.getElementById('undo').onclick = () => {
@@ -50,10 +60,12 @@ document.getElementById('undo').onclick = () => {
   state.turn = previous.turn;
   document.getElementById('log-list').innerHTML = previous.log;
   ui.syncHeader();
+  saveCurrentGame('playing');
 };
 
 // ===== Reset / Home / Help =====
 document.getElementById('reset').onclick = () => {
+  clearCurrentGame();
   const startScore = +startingScore.value;
   state.players.forEach(p => p.score = startScore);
   state.currentPlayer = 0;
@@ -66,6 +78,7 @@ document.getElementById('reset').onclick = () => {
 };
 
 document.getElementById('home').onclick = () => {
+  clearCurrentGame();
   state.history = [];
   document.getElementById('log-list').innerHTML = '';
   throwInputs.forEach(i => i.value = '');

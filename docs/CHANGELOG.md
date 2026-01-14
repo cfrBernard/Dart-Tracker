@@ -1,3 +1,13 @@
+## [v0.2.0] – 2026/01/14
+
+### Added
+- Security persistence (resume game)
+
+### Note
+- Resume popup needed (alert for now)
+
+---
+
 ## [v0.1.0] – 2026/01/13
 
 ### Added

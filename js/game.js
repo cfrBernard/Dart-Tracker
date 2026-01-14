@@ -2,6 +2,8 @@
 
 import { state } from './state.js';
 import { ui } from './ui.js';
+import { saveCurrentGame } from './persistence/security.js';
+import { clearCurrentGame } from './persistence/security.js';
 
 export function playTurn(throws) {
   const p = state.players[state.currentPlayer];
@@ -19,6 +21,8 @@ export function playTurn(throws) {
 
   if (after === 0) {
     ui.log('WIN', p);
+    saveCurrentGame('finished');
+    clearCurrentGame(); // fix ? 
     return;
   }
 

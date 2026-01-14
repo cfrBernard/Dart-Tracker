@@ -1,3 +1,15 @@
+## [v0.3.0] – 2026/01/14
+
+### Added
+- Game history (JSON Based)
+- Data export/import
+- Clear data function
+
+### Note
+- Needs some UI polish / game history convention
+
+---
+
 ## [v0.2.0] – 2026/01/14
 
 ### Added

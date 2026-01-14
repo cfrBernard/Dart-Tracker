@@ -2,7 +2,7 @@
 
 A lightweight web application to track darts games (301 / 501 / 701) in real time. Designed for simplicity, speed, and focus during gameplay, Dart Tracker helps players manage scores, turns, and game history without friction.
 
-![Version](https://img.shields.io/badge/version-v0.2.0-blue)
+![Version](https://img.shields.io/badge/version-v0.3.0-blue)
 [![License](https://img.shields.io/github/license/cfrBernard/Dart-Tracker)](./LICENSE.md)
 
 ## Features
@@ -16,6 +16,7 @@ A lightweight web application to track darts games (301 / 501 / 701) in real tim
 - Game log with turn history
 - Undo last action, Skip turn, Reset game
 - Security persistence (resume game)
+- Game history (with data export/import)
 
 ---
 
@@ -92,11 +93,14 @@ Dart-Tracker/
 │   └── style.css
 ├── docs/
 │   └── CHANGELOG.md
+├── index.html
 ├── js/
 │   ├── events.js
 │   ├── game.js
 │   ├── init.js
 │   ├── persistence/
+│   │   ├── export.js
+│   │   ├── history.js
 │   │   ├── security.js
 │   │   └── stats.js
 │   ├── preview.js
@@ -104,7 +108,6 @@ Dart-Tracker/
 │   ├── state.js
 │   ├── ui.js
 │   └── utils.js
-├── index.html
 ├── LICENSE.md
 └── README.md
 ```
@@ -128,7 +131,6 @@ Dart-Tracker/
 
 ### Short Term
 
-- Implement Business / Game Persistence
 - Help popup (rules & input format)
 - Resume game popup
 - CSS polish
@@ -136,6 +138,7 @@ Dart-Tracker/
     - Game action feedback
     - Global visual consistency
 - iOS icons & PWA readiness
+- Implement player stats
 
 ### UX Improvements
 
@@ -143,14 +146,7 @@ Dart-Tracker/
 - More visual feedback for actions (bust, win, skip, undo)
 - Normalize invalid inputs
 
-### Persistence (Planned)
-
-- **Business persistence**
-    - Game stats
-    - Match history
-    - Player performance
-
-> Currently scaffolded but not implemented in v0.2.0
+> Currently scaffolded but not implemented in v0.3.0
 
 ---
 

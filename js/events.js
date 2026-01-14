@@ -8,6 +8,7 @@ import { parseThrows } from './utils.js';
 import { updatePreviewScore } from './preview.js';
 import { saveCurrentGame } from './persistence/security.js';
 import { clearCurrentGame } from './persistence/security.js';
+import { renderGameHistory } from './persistence/history.js';
 import { initApp } from './init.js';
 
 const p1 = document.getElementById('p1');
@@ -32,6 +33,20 @@ document.getElementById('start').onclick = () => {
   ui.syncHeader();
   router.go('game');
   throwInputs[0].focus();
+};
+
+document.getElementById('btn-history').addEventListener('click', () => {
+  router.go('history');
+  renderGameHistory();
+});
+
+// ===== Game History =====
+document.getElementById('back-to-welcome').onclick = () => {
+  router.go('welcome');
+};
+
+document.getElementById('back-to-history').onclick = () => {
+  router.go('history');
 };
 
 // ===== Validate Turn =====

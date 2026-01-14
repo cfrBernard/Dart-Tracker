@@ -4,6 +4,7 @@ import { state } from './state.js';
 import { ui } from './ui.js';
 import { saveCurrentGame } from './persistence/security.js';
 import { clearCurrentGame } from './persistence/security.js';
+import { addGame } from './persistence/history.js';
 
 export function playTurn(throws) {
   const p = state.players[state.currentPlayer];
@@ -23,6 +24,18 @@ export function playTurn(throws) {
     ui.log('WIN', p);
     saveCurrentGame('finished');
     clearCurrentGame(); // fix ? 
+
+    addGame({ // Game history
+      id: state.gameId,
+      date: new Date().toISOString(),
+      mode: Number(document.getElementById('startingScore').value),
+      players: state.players.map(pl => pl.name),
+      winner: p.name,
+      turns: state.turn,
+      logs: [...document.querySelectorAll('#log-list li')]
+        .map(li => li.textContent)
+    });
+
     return;
   }
 

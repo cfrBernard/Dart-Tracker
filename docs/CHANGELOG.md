@@ -1,3 +1,13 @@
+## [v0.3.1] – 2026/01/15
+
+### Fixed
+- Unique game ID fixed
+
+### Improved
+- Game history UI layout 
+
+---
+
 ## [v0.3.0] – 2026/01/14
 
 ### Added

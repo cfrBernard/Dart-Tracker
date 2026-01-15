@@ -34,16 +34,46 @@
 
   <!-- ===== History ===== -->
   <div class="screen" data-screen="history">
-    <h2>Game History</h2>
-    <ul id="history-list"></ul>
-    <button id="back-to-welcome">Back</button>
+    <div class="screen-header">
+      <h2>Game History</h2>
+      <button id="back-to-welcome" class="back-btn" aria-label="Back">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="currentColor"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </div>
+  
+    <div class="history-content">
+      <ul id="history-list"></ul>
+    </div>
   </div>
-
+  
   <!-- ===== History Detail ===== -->
   <div class="screen" data-screen="game-detail">
-    <h2>Game Detail</h2>
+    <div class="screen-header">
+      <h2>Game Detail</h2>
+      <button id="back-to-history" class="back-btn" aria-label="Back">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="currentColor"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </div>
+  
     <div id="game-detail-logs"></div>
-    <button id="back-to-history">Back</button>
   </div>
 
   <!-- ===== Game ===== -->
@@ -95,6 +125,9 @@
 <script type="module" src="js/preview.js"></script>
 <script type="module" src="js/events.js"></script>
 <script type="module" src="js/persistence/export.js"></script>
+<script type="module" src="js/persistence/history.js"></script>
+<script type="module" src="js/persistence/security.js"></script>
+<script type="module" src="js/persistence/stats.js"></script>
 
 </body>
 </html>

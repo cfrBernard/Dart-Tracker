@@ -1,3 +1,13 @@
+## [v0.3.2] – 2026/01/15
+
+### Fixed
+- Game history scroll fixed
+
+### Improved
+- Back btn reworked 
+
+---
+
 ## [v0.3.1] – 2026/01/15
 
 ### Fixed

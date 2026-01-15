@@ -2,7 +2,7 @@
 
 A lightweight web application to track darts games (301 / 501 / 701) in real time. Designed for simplicity, speed, and focus during gameplay, Dart Tracker helps players manage scores, turns, and game history without friction.
 
-![Version](https://img.shields.io/badge/version-v0.3.2-blue)
+![Version](https://img.shields.io/badge/version-v0.3.3-blue)
 [![License](https://img.shields.io/github/license/cfrBernard/Dart-Tracker)](./LICENSE.md)
 
 ## Features
@@ -146,7 +146,7 @@ Dart-Tracker/
 - More visual feedback for actions (bust, win, skip, undo)
 - Normalize invalid inputs
 
-> Currently scaffolded but not implemented in v0.3.2
+> Currently scaffolded but not implemented in v0.3.3
 
 ---
 

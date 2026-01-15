@@ -1,3 +1,10 @@
+## [v0.3.3] – 2026/01/15
+
+### Fixed
+- History detail scroll fixed
+
+---
+
 ## [v0.3.2] – 2026/01/15
 
 ### Fixed
